@@ -31,7 +31,6 @@ namespace System.Net.TMDb.Internal
             {
                 this.taskFunc = taskFunc;
                 this.cancellationToken = cancellationToken;
-                this.previousTask = null;
             }
 
             internal Task<HttpResponseMessage> ExecuteAsync()

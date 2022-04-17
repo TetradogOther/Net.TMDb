@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hasseware.Net.TMDb", "src\Net.TMDb\Hasseware.Net.TMDb.csproj", "{0DD87046-97FE-41C9-8FA9-EFA2C55B6129}"
 EndProject
@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2A40F7
 		.nuget\TheMovieDB.nuspec = .nuget\TheMovieDB.nuspec
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.TMDb.Standard", "Net.TMDb.Standard\Net.TMDb.Standard.csproj", "{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,8 +33,15 @@ Global
 		{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D283AAB-7F69-4172-B9AE-14161DBFBBF7}
 	EndGlobalSection
 EndGlobal

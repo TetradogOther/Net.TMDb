@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Gabriel.Cat.S.Extension;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
@@ -164,7 +165,7 @@ namespace System.Net.TMDb
         public Task<IImageStorage> GetImageStorageAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             return Settings.GetConfigurationAsync(cancellationToken)
-                .ContinueWith(t => (IImageStorage)new StorageClient(t.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
+                .ContinueWith(t => (IImageStorage)/*new StorageClient*/(t.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         #endregion
@@ -221,21 +222,21 @@ namespace System.Net.TMDb
 
 		#region Request Handling Methods
 
-		private Task<T> GetAsync<T>(string cmd, IDictionary<string, object> parameters, CancellationToken cancellationToken)
+		private Task<T> GetAsync<T>(string cmd, IDictionary<string, object>? parameters, CancellationToken cancellationToken)
 		{
 			return this.client.GetAsync(CreateRequestUri(cmd, parameters), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                 .ContinueWith(t => DeserializeAsync<T>(t.Result))
 				.Unwrap();
 		}
 
-        private Task<dynamic> GetDynamicAsync(string cmd, IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        private Task<object?> GetDynamicAsync(string cmd, IDictionary<string, object>? parameters, CancellationToken cancellationToken)
         {
             return this.client.GetAsync(CreateRequestUri(cmd, parameters), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                 .ContinueWith(t => DeserializeDynamicAsync(t.Result))
                 .Unwrap();
         }
 
-		private Task<dynamic> SendDynamicAsync(string cmd, IDictionary<string, object> parameters, HttpContent content, HttpMethod method, CancellationToken cancellationToken)
+		private Task<object?> SendDynamicAsync(string cmd, IDictionary<string, object>? parameters, HttpContent content, HttpMethod method, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(method, CreateRequestUri(cmd, parameters)) { Content = content };
             return this.client.SendAsync(request, cancellationToken)
@@ -255,10 +256,10 @@ namespace System.Net.TMDb
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
 		}
 
-		private static Task<dynamic> DeserializeDynamicAsync(HttpResponseMessage response)
+		private static Task<object?> DeserializeDynamicAsync(HttpResponseMessage response)
 		{
 			return response.Content.ReadAsStringAsync()
-                .ContinueWith<dynamic>(t =>
+                .ContinueWith<object?>(t =>
                 {
 #if DEBUG
         			System.Diagnostics.Debug.WriteLine(t.Result);
@@ -478,7 +479,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"value\":\"{0}\"}}", value);
 
                 return client.SendDynamicAsync($"movie/{id}/rating", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 
 			public Task<bool> SetFavoriteAsync(string session, int id, bool value, CancellationToken cancellationToken)
@@ -487,7 +488,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"media_type\":\"movie\",\"media_id\":\"{0}\",\"favorite\":\"{1}\"}}", id, value);
 
                 return client.SendDynamicAsync($"account/{id}/favorite", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 
 			public Task<bool> SetWatchlistAsync(string session, int id, bool value, CancellationToken cancellationToken)
@@ -496,7 +497,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"media_type\":\"movie\",\"media_id\":\"{0}\",\"watchlist\":\"{1}\"}}", id, value);
 
                 return client.SendDynamicAsync($"account/{id}/watchlist", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 		}
 
@@ -668,7 +669,7 @@ namespace System.Net.TMDb
 			public Task<string> GetNetworkAsync(int id, CancellationToken cancellationToken)
 			{
                 return client.GetDynamicAsync($"network/{id}", null, cancellationToken)
-                    .ContinueWith(t => (string)t.Result.Value<string>("name"), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (string)t.GetProperty("name"), TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 			
 			public Task<Shows> GetAccountRatedAsync(string session, string language, int page, CancellationToken cancellationToken)
@@ -695,7 +696,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"value\":\"{0}\"}}", value);
 
                 return client.SendDynamicAsync($"tv/{id}/rating", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 1), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 1), TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 
 			public Task<bool> SetRatingAsync(string session, int id, int season, int episode, decimal value, CancellationToken cancellationToken)
@@ -704,7 +705,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"value\":\"{0}\"}}", value);
 
 				return client.SendDynamicAsync($"tv/{id}/season/{season}/episode/{episode}/rating", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 1), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 1), TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 
 			public Task<bool> SetFavoriteAsync(string session, int id, bool value, CancellationToken cancellationToken)
@@ -713,7 +714,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"media_type\":\"tv\",\"media_id\":\"{0}\",\"favorite\":\"{1}\"}}", id, value);
 
                 return client.SendDynamicAsync($"account/{id}/favorite", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 
 			public Task<bool> SetWatchlistAsync(string session, int id, bool value, CancellationToken cancellationToken)
@@ -722,7 +723,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"media_type\":\"tv\",\"media_id\":\"{0}\",\"watchlist\":\"{1}\"}}", id, value);
 
                 return client.SendDynamicAsync($"account/{id}/watchlist", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 		}
 
@@ -886,14 +887,14 @@ namespace System.Net.TMDb
 
 			public Task<List> GetAsync(string id, CancellationToken cancellationToken)
 			{
-                return client.GetAsync<List>($"list/{id}", null, cancellationToken);
+                return client.GetAsync<List>($"list/{id}", new SortedList<string,object>(), cancellationToken);
 			}
 
 			public Task<bool> ContainsAsync(string id, int movieId, CancellationToken cancellationToken)
 			{
 				var parameters = new Dictionary<string, object> { { "movie_id", movieId } };
                 return client.GetDynamicAsync($"list/{id}/item_status", parameters, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<bool>("item_present") == true), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)t.GetProperty("item_present"), TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 
             public Task<string> CreateAsync(string session, string name, string description, string language, CancellationToken cancellationToken)
@@ -903,7 +904,7 @@ namespace System.Net.TMDb
 					"{{\"name\":\"{0}\",\"description\":\"{1}\",\"language\":\"{2}\"}}", name, description, language);
 
                 return client.SendDynamicAsync("list", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (string)t.Result.Value<string>("list_id"), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (string)("list_id"), TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 
 			public Task<bool> InsertAsync(string session, string id, string mediaId, CancellationToken cancellationToken)
@@ -912,7 +913,7 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"media_id\":\"{0}\"}}", mediaId);
 
                 return client.SendDynamicAsync($"list/{id}/add_item", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 
 			public Task<bool> RemoveAsync(string session, string id, string mediaId, CancellationToken cancellationToken)
@@ -921,22 +922,22 @@ namespace System.Net.TMDb
 				string content = String.Format("{{\"media_id\":\"{0}\"}}", mediaId);
 
                 return client.SendDynamicAsync($"list/{id}/remove_item", parameters, new StringContent(content, null, "application/json"), HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 
             public Task<bool> ClearAsync(string session, string id, CancellationToken cancellationToken)
 			{
 				var parameters = new Dictionary<string, object> { { "session_id", session }, { "confirm", "true" } };
                 return client.SendDynamicAsync($"list/{id}/clear", parameters, null, HttpMethod.Post, cancellationToken)
-                    .ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 
-			public Task<bool> DeleteAsync(string session, string id, CancellationToken cancellationToken)
+			public  Task<bool> DeleteAsync(string session, string id, CancellationToken cancellationToken)
 			{
 				var parameters = new Dictionary<string, object> { { "session_id", session } };
-                return client.SendDynamicAsync($"list/{id}", parameters, null, HttpMethod.Delete, cancellationToken)
-    				.ContinueWith(t => (bool)(t.Result.Value<int>("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
-            }
+				return client.SendDynamicAsync($"list/{id}", parameters, null, HttpMethod.Delete, cancellationToken)
+							 .ContinueWith(t => (bool)((int)t.GetProperty("status_code") == 12), TaskContinuationOptions.OnlyOnRanToCompletion);
+			}
 		}
 
 		private sealed class ReviewContext : IReviewInfo
@@ -983,12 +984,12 @@ namespace System.Net.TMDb
                     .ContinueWith(t => t.Result.Results, TaskContinuationOptions.OnlyOnRanToCompletion);
 			}
 
-			public Task<dynamic> GetConfigurationAsync(CancellationToken cancellationToken)
+			public Task<object?> GetConfigurationAsync(CancellationToken cancellationToken)
 			{
                 return client.GetDynamicAsync("configuration", null, cancellationToken);
 			}
 
-			public Task<dynamic> GetTimezonesAsync(CancellationToken cancellationToken)
+			public Task<object?> GetTimezonesAsync(CancellationToken cancellationToken)
 			{
                 return client.GetDynamicAsync("timezones/list", null, cancellationToken);
 			}
@@ -1038,10 +1039,11 @@ namespace System.Net.TMDb
             {
                 response.Content.ReadAsStringAsync().ContinueWith(t2 =>
                 {
-                    dynamic status = JsonConvert.DeserializeObject(t2.Result);
-                    int serviceCode = (status.status_code != null) ? status.status_code : 0;
-                    string message = (status.errors != null) ? String.Join(Environment.NewLine, status.errors) : status.status_message;
-                    tcs.TrySetException(new ServiceRequestException(statusCode, serviceCode, message));
+                    object? status = JsonConvert.DeserializeObject(t2.Result);
+                    int serviceCode =status!=null? ((status.GetProperty("status_code") != null) ? (int) status.GetProperty("status_code") : 0):0;
+                    string message = status != null ? (status.GetProperty("errors") != null) ? String.Join(Environment.NewLine, status.GetProperty("errors")) :(string) status.GetProperty("status_message"):string.Empty ;
+
+					tcs.TrySetException(new ServiceRequestException(statusCode, serviceCode, message));
                 });
             }
             else tcs.TrySetException(new ServiceRequestException(statusCode, 0, response.ReasonPhrase));

@@ -406,12 +406,12 @@ namespace System.Net.TMDb
 		/// <summary>
 		/// Get the system wide configuration information. Some elements of the API require some knowledge of this configuration data. 
 		/// </summary>
-		Task<dynamic> GetConfigurationAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<object?> GetConfigurationAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get the list of supported timezones for the API methods that support them.
 		/// </summary>
-		Task<dynamic> GetTimezonesAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<object?> GetTimezonesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get a list of valid jobs.
