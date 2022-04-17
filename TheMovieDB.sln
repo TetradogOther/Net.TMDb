@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hasseware.Net.TMDb", "src\Net.TMDb\Hasseware.Net.TMDb.csproj", "{0DD87046-97FE-41C9-8FA9-EFA2C55B6129}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hasseware.Net.TMDb.Portable", "src\Net.TMDb.Portable\Hasseware.Net.TMDb.Portable.csproj", "{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2A40F79D-FCF4-4264-9334-906F8099F5DD}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -19,24 +15,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2A40F7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.TMDb.Standard", "Net.TMDb.Standard\Net.TMDb.Standard.csproj", "{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.TMDb.Standard.TestUI", "Net.TMDb.Standard.TestUI\Net.TMDb.Standard.TestUI.csproj", "{41802D73-02C5-49A3-ADEE-CBDEB5CE9E1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0DD87046-97FE-41C9-8FA9-EFA2C55B6129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0DD87046-97FE-41C9-8FA9-EFA2C55B6129}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0DD87046-97FE-41C9-8FA9-EFA2C55B6129}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0DD87046-97FE-41C9-8FA9-EFA2C55B6129}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF54ECE6-5A39-4AEB-BC0F-071D0D14BBD9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CBFA74E-BBCB-4874-A2A1-94A6E2655846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41802D73-02C5-49A3-ADEE-CBDEB5CE9E1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41802D73-02C5-49A3-ADEE-CBDEB5CE9E1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41802D73-02C5-49A3-ADEE-CBDEB5CE9E1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41802D73-02C5-49A3-ADEE-CBDEB5CE9E1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

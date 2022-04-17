@@ -23,7 +23,7 @@ namespace System.Net.TMDb.Internal
             private readonly Func<Task<HttpResponseMessage>> taskFunc;
             private readonly CancellationToken cancellationToken;
 
-            private Task<HttpResponseMessage> previousTask;
+            private Task<HttpResponseMessage>? previousTask;
 
             static readonly long UnixEpochTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
@@ -31,6 +31,7 @@ namespace System.Net.TMDb.Internal
             {
                 this.taskFunc = taskFunc;
                 this.cancellationToken = cancellationToken;
+     
             }
 
             internal Task<HttpResponseMessage> ExecuteAsync()
@@ -85,7 +86,7 @@ namespace System.Net.TMDb.Internal
                 }
             }
 
-            private Task<HttpResponseMessage> ExecuteAsyncImpl(Task ignore)
+            private Task<HttpResponseMessage> ExecuteAsyncImpl(Task? ignore)
             {
                 if (this.cancellationToken.IsCancellationRequested)
                 {
